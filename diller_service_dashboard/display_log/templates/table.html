@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Data Table</title>
+    <script>
+        const logData = {
+            info: [
+                { "Timestamp": "2025-03-19 10:00:00", "Log Type": "INFO", "Message": "System initialized." },
+                { "Timestamp": "2025-03-19 10:05:00", "Log Type": "INFO", "Message": "User login successful." },
+                { "Timestamp": "2025-03-19 10:10:00", "Log Type": "INFO", "Message": "Data sync completed." },
+                { "Timestamp": "2025-03-19 10:15:00", "Log Type": "INFO", "Message": "Background job started." },
+                { "Timestamp": "2025-03-19 10:20:00", "Log Type": "INFO", "Message": "Data processed successfully." },
+                { "Timestamp": "2025-03-19 10:25:00", "Log Type": "INFO", "Message": "User logout successful." },
+                { "Timestamp": "2025-03-19 10:30:00", "Log Type": "INFO", "Message": "System shutdown." },
+                { "Timestamp": "2025-03-19 10:35:00", "Log Type": "INFO", "Message": "Backup completed." },
+                { "Timestamp": "2025-03-19 10:40:00", "Log Type": "INFO", "Message": "Update check passed." },
+                { "Timestamp": "2025-03-19 10:45:00", "Log Type": "INFO", "Message": "User password change." },
+                { "Timestamp": "2025-03-19 10:50:00", "Log Type": "INFO", "Message": "System started successfully." },
+                { "Timestamp": "2025-03-19 10:55:00", "Log Type": "INFO", "Message": "Scheduled task triggered." },
+                { "Timestamp": "2025-03-19 11:00:00", "Log Type": "INFO", "Message": "User data updated." },
+                { "Timestamp": "2025-03-19 11:05:00", "Log Type": "INFO", "Message": "System performance optimized." },
+                { "Timestamp": "2025-03-19 11:10:00", "Log Type": "INFO", "Message": "API request received." },
+                { "Timestamp": "2025-03-19 11:15:00", "Log Type": "INFO", "Message": "File uploaded successfully." },
+                { "Timestamp": "2025-03-19 11:20:00", "Log Type": "INFO", "Message": "Notification sent." },
+                { "Timestamp": "2025-03-19 11:25:00", "Log Type": "INFO", "Message": "Cache cleared." },
+                { "Timestamp": "2025-03-19 11:30:00", "Log Type": "INFO", "Message": "User logged out." }
+            ],
+            error: [
+                { "Timestamp": "2025-03-19 10:02:00", "Log Type": "ERROR", "Message": "Database connection failed." },
+                { "Timestamp": "2025-03-19 10:08:00", "Log Type": "ERROR", "Message": "User not found." },
+                { "Timestamp": "2025-03-19 10:12:00", "Log Type": "ERROR", "Message": "Failed to save record." },
+                { "Timestamp": "2025-03-19 10:18:00", "Log Type": "ERROR", "Message": "Permission denied." },
+                { "Timestamp": "2025-03-19 10:22:00", "Log Type": "ERROR", "Message": "Session expired." },
+                { "Timestamp": "2025-03-19 10:28:00", "Log Type": "ERROR", "Message": "Invalid input data." },
+                { "Timestamp": "2025-03-19 10:33:00", "Log Type": "ERROR", "Message": "Request timeout." },
+                { "Timestamp": "2025-03-19 10:37:00", "Log Type": "ERROR", "Message": "File not found." },
+                { "Timestamp": "2025-03-19 10:42:00", "Log Type": "ERROR", "Message": "Authentication failed." },
+                { "Timestamp": "2025-03-19 10:47:00", "Log Type": "ERROR", "Message": "Network error." },
+                { "Timestamp": "2025-03-19 10:52:00", "Log Type": "ERROR", "Message": "Service unavailable." },
+                { "Timestamp": "2025-03-19 10:55:00", "Log Type": "ERROR", "Message": "User account locked." },
+                { "Timestamp": "2025-03-19 10:58:00", "Log Type": "ERROR", "Message": "Server not responding." },
+                { "Timestamp": "2025-03-19 11:03:00", "Log Type": "ERROR", "Message": "Unexpected error occurred." },
+                { "Timestamp": "2025-03-19 11:08:00", "Log Type": "ERROR", "Message": "Invalid request format." },
+                { "Timestamp": "2025-03-19 11:13:00", "Log Type": "ERROR", "Message": "Authentication token expired." },
+                { "Timestamp": "2025-03-19 11:18:00", "Log Type": "ERROR", "Message": "Permission error on file access." },
+                { "Timestamp": "2025-03-19 11:20:00", "Log Type": "ERROR", "Message": "Data corrupted during transfer." },
+                { "Timestamp": "2025-03-19 11:25:00", "Log Type": "ERROR", "Message": "Application crash detected." }
+            ]
+        };
+
+        let currentPage = 1;
+        let selectedLogType = 'info';
+
+        async function fetchData(page = 1, logType = selectedLogType) {
+            const logsPerPage = 10;
+            const selectedLogs = logData[logType];
+            const totalPages = Math.ceil(selectedLogs.length / logsPerPage);
+            const pageData = selectedLogs.slice((page - 1) * logsPerPage, page * logsPerPage);
+
+            const tableBody = document.getElementById("table-body");
+            tableBody.innerHTML = "";
+            pageData.forEach(row => {
+                let tr = "<tr>";
+                for (let key in row) {
+                    tr += `<td>${row[key]}</td>`;
+                }
+                tr += "</tr>";
+                tableBody.innerHTML += tr;
+            });
+
+            document.getElementById("pagination").innerHTML = `
+                ${page > 1 ? `<button onclick="fetchData(${page - 1}, '${logType}')">Previous</button>` : ""}
+                Page ${page} of ${totalPages}
+                ${page < totalPages ? `<button onclick="fetchData(${page + 1}, '${logType}')">Next</button>` : ""}
+            `;
+        }
+
+        function changeLogType() {
+            selectedLogType = document.getElementById("log-type").value;
+            fetchData(1, selectedLogType);
+        }
+
+        function refreshPage() {
+            fetchData(currentPage, selectedLogType);
+        }
+
+        window.onload = () => fetchData();
+    </script>
+</head>
+
+<body>
+    <h2>Log Data</h2>
+
+    <!-- Controls -->
+    <div style="margin-bottom: 10px;">
+        <select id="log-type" onchange="changeLogType()">
+            <option value="info">INFO Logs</option>
+            <option value="error">ERROR Logs</option>
+        </select>
+
+        <button style="float: right;" onclick="refreshPage()">Refresh</button>
+    </div>
+
+    <!-- Table -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Log Type</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div id="pagination"></div>
+</body>
+
+</html>
