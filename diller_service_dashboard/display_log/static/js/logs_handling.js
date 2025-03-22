@@ -2,34 +2,60 @@ let currentPage = 1;
 let pageSize = 20;
 let totalPages = 1;
 let searchQuery = "";
+let startDate = "";
+let endDate = "";
 
 function searchLogs() {
     searchQuery = document.getElementById("searchQuery").value;
+    startDate = document.getElementById("startDate").value;
+    endDate = document.getElementById("endDate").value;
     currentPage = 1;
     loadLogs(currentPage);
 }
 
 function loadLogs(page) {
-    let logType = document.getElementById("logType").value;
-    let loadingIndicator = document.getElementById("loading");
+    const logType = document.getElementById("logType").value;
+    const loadingIndicator = document.getElementById("loading");
+    const searchQuery = document.getElementById("searchQuery").value; // Assuming a search query input exists
+
+    const startDateInput = document.getElementById("startDate").value; // Date input values
+    const endDateInput = document.getElementById("endDate").value;
+
     loadingIndicator.style.display = "block";
+
+    // Construct base URL
     let url = `/fetch-logs/?page=${page}&page_size=${pageSize}&collection_name=${logType}`;
+
+    // Append search query if provided
     if (searchQuery) {
         url += `&search=${encodeURIComponent(searchQuery)}`;
     }
 
+    // Handle startDate and endDate if present
+    if (startDateInput) {
+        const formattedStartDate = formatDate(new Date(startDateInput)); // Format to "yyyy-MM-ddTHH:mm:ss"
+        url += `&start_date=${encodeURIComponent(formattedStartDate)}`;
+    }
+    if (endDateInput) {
+        const formattedEndDate = formatDate(new Date(endDateInput));
+        url += `&end_date=${encodeURIComponent(formattedEndDate)}`;
+    }
+
+    // Fetch logs from the constructed URL
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.logs && Array.isArray(data.logs)) {
-                updateTable(data.logs);
-                updatePagination(page, data.total_logs);
+                updateTable(data.logs); // Update the table with fetched logs
+                updatePagination(page, data.total_logs); // Update pagination info
+            } else {
+                console.error("Unexpected response format:", data);
             }
         })
-        .catch(error => console.error('Error fetching logs:', error))
+        .catch(error => console.error("Error fetching logs:", error))
         .finally(() => {
-            loadingIndicator.style.display = "none";
-        });
+            loadingIndicator.style.display = "none"; // Hide loading indicator after fetch
+        }); 
 }
 
 function updateTable(logs) {
@@ -174,5 +200,26 @@ function addEllipsis() {
 
     li.appendChild(span);
     pagination.appendChild(li);
+}
+
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    // Get timezone offset in hours and minutes
+    const offsetMinutes = date.getTimezoneOffset();
+    const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
+    const offsetMins = Math.abs(offsetMinutes % 60);
+    const sign = offsetMinutes > 0 ? '-' : '+';
+
+    // Format timezone offset as "+07:00" or "-07:00"
+    const timezoneOffset = `${sign}${String(offsetHours).padStart(2, '0')}:${String(offsetMins).padStart(2, '0')}`;
+
+    // Return the date in the format: yyyy-MM-ddTHH:mm:ss+07:00
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${timezoneOffset}`;
 }
 

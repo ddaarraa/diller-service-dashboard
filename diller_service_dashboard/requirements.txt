@@ -14,4 +14,5 @@ tzdata==2024.2
 urllib3==2.3.0
 python-decouple==3.8
 djangorestframework-simplejwt
+requests
 

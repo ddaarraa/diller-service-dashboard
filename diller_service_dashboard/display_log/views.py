@@ -10,6 +10,8 @@ def fetch_logs(request):
     page_size = request.GET.get('page_size', 10)
     collection_name = request.GET.get('collection_name', 'vpc_logs_collection')
     search_query = request.GET.get('search', None) 
+    start_date = request.GET.get('start_date', None) 
+    end_date = request.GET.get('end_date', None) 
 
     try:
         page = int(page)
@@ -17,10 +19,16 @@ def fetch_logs(request):
     except ValueError:
         return JsonResponse({"error": "Invalid page or page_size values. They must be integers."}, status=400)
 
-    fastapi_url = f'http://localhost:8001/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
+    fastapi_url = f'http://fastapi:8000/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
     
     if search_query:
         fastapi_url += f'&search={search_query}'
+
+    if start_date :
+        fastapi_url += f'&start_date = {start_date}'
+
+    if end_date : 
+        fastapi_url += f'&end_date = {end_date}'
 
     try:
         response = requests.get(fastapi_url)
