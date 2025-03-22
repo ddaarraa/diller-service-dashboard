@@ -33,11 +33,11 @@ function loadLogs(page) {
 
     // Handle startDate and endDate if present
     if (startDateInput) {
-        const formattedStartDate = formatDate(new Date(startDateInput)); // Format to "yyyy-MM-ddTHH:mm:ss"
+        const formattedStartDate = formatDateToISOWithOffset(new Date(startDateInput)); // Format to "yyyy-MM-ddTHH:mm:ss"
         url += `&start_date=${encodeURIComponent(formattedStartDate)}`;
     }
     if (endDateInput) {
-        const formattedEndDate = formatDate(new Date(endDateInput));
+        const formattedEndDate = formatDateToISOWithOffset(new Date(endDateInput));
         url += `&end_date=${encodeURIComponent(formattedEndDate)}`;
     }
 
@@ -202,24 +202,18 @@ function addEllipsis() {
     pagination.appendChild(li);
 }
 
-function formatDate(date) {
+function formatDateToISOWithOffset(dateString) {
+    const date = new Date(dateString); // Convert input to JS date object
+    const offset = "+07:00"; // Assuming your backend uses UTC+7
+
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const seconds = "00"; // If seconds aren't captured in input, default to "00"
 
-    // Get timezone offset in hours and minutes
-    const offsetMinutes = date.getTimezoneOffset();
-    const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
-    const offsetMins = Math.abs(offsetMinutes % 60);
-    const sign = offsetMinutes > 0 ? '-' : '+';
-
-    // Format timezone offset as "+07:00" or "-07:00"
-    const timezoneOffset = `${sign}${String(offsetHours).padStart(2, '0')}:${String(offsetMins).padStart(2, '0')}`;
-
-    // Return the date in the format: yyyy-MM-ddTHH:mm:ss+07:00
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${timezoneOffset}`;
+    // Return formatted date-time string in the correct ISO format
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
 

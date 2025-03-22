@@ -25,10 +25,10 @@ def fetch_logs(request):
         fastapi_url += f'&search={search_query}'
 
     if start_date :
-        fastapi_url += f'&start_date = {start_date}'
+        fastapi_url += f'&start_date={start_date}'
 
     if end_date : 
-        fastapi_url += f'&end_date = {end_date}'
+        fastapi_url += f'&end_date={end_date}'
 
     try:
         response = requests.get(fastapi_url)
@@ -38,3 +38,22 @@ def fetch_logs(request):
         return JsonResponse({"error": f"Error fetching logs from FastAPI: {str(e)}"}, status=500)
 
     return JsonResponse(data, safe=False)
+
+
+from datetime import datetime
+import urllib.parse
+
+def format_date_to_iso_with_offset_and_encode(date_string):
+    # Parse the input string to a datetime object
+    date = datetime.fromisoformat(date_string)
+    
+    # Set the UTC+7 offset
+    offset = "+07:00"
+    
+    # Format the datetime object to the desired string format
+    formatted_date = date.strftime(f"%Y-%m-%dT%H:%M:00{offset}")
+    
+    # URL encode the formatted date string
+    encoded_date = urllib.parse.quote(formatted_date)
+    
+    return encoded_date
