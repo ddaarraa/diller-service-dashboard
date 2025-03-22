@@ -1,6 +1,7 @@
 from django.urls import path
-from . import views  
+from . import views
 
 urlpatterns = [
-    path("table/", views.log_view, name="log"), 
+    path('', views.log_view, name='logs'),  
+    path('fetch-logs/', views.fetch_logs, name='fetch_logs'), 
 ]

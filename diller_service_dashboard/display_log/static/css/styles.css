@@ -1,12 +1,12 @@
+/* General Styles */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-}
-
-.d-flex {
+    height: 100vh;
     display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
-
 
 /* Sidebar */
 .sidebar {
@@ -15,44 +15,120 @@ body {
     background: #343a40;
     color: white;
     padding: 20px;
+    position: fixed;
+    overflow: hidden;
 }
 
 .sidebar h4 {
     color: #f8f9fa;
     margin-bottom: 10px;
+    font-size: 30px;
 }
 
 .sidebar a {
     display: block;
     color: white;
     text-decoration: none;
-    padding: 10px;
-    margin-bottom: 5px;
+    padding: 7px 10px;
+    font-size: 16px;
     border-radius: 5px;
-
 }
 
 .sidebar a:hover {
     background: #495057;
 }
 
-/* Main Content */
+/* Content Area */
 .content {
-    flex-grow: 1;
+    margin-left: 250px;
     padding: 20px;
+    flex-grow: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-/* Table */
+
+/* Table Container */
+.table-container {
+    flex-grow: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 150px);
+    position: relative;
+}
+
+/* Table Header */
+.table-header {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+}
+
+/* Table Body */
+.table-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Table Styling */
 .table {
-    margin-top: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td {
+    padding: 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+    width: 20%;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    width: 80%;
+}
+
+/* Loading Indicator */
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1;
 }
 
 /* Pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    position: fixed;
+    bottom: 10px;
+    left: 250px;
+    right: 0;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 10;
+}
+
 .pagination {
     margin-top: 15px;
     justify-content: center;
     display: flex;
-
 }
 
 .pagination .page-item {
@@ -65,4 +141,27 @@ body {
 
 .custom-select {
     width: 200px;
+}
+
+.d-flex.align-items-center.gap-3 {
+    gap: 1rem;
+}
+
+.align-self-end {
+    align-self: flex-end;
+}
+
+#searchQuery {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 350px;
+    transition: border-color 0.3s ease;
+}
+
+#searchQuery:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

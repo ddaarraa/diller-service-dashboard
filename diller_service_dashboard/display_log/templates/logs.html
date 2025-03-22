@@ -1,88 +1,110 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Log Viewer</title>
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet"
+            href="{% static 'css/styles.css' %}?v={{ timestamp }}">
+        <script
+            src="{% static 'js/logs_handling.js' %}?v={{ timestamp }}"></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log Viewer</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-
-<body>
-    <div class="d-flex">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h4>Diller Bitch</h4>
-            <a href="#">Log Display</a>
-            <a href="#">Log Correlation</a>
-        </div>
-
-        <!-- Main Content -->
-        <div class="content p-4">
-            <h2>Log Viewer</h2><br>
-
-            <!-- Log Type Selection -->
-            <div class="mb-3">
-                <label for="logType" class="form-label">Select Log Type:</label>
-                <select class="form-select custom-select" id="logType" onchange="changeLogType()">
-                    <option value="sys">System Logs</option>
-                    <option value="app">Application Logs</option>
-                    <option value="vpc">VPC Logs</option>
-                </select>
+    <body>
+        <div class="d-flex">
+            <div class="sidebar">
+                <h4>Diller Bitch</h4><br>
+                <a href="#">Log Display</a>
+                <a href="#">Log Correlation</a>
             </div>
 
-            <!-- Log Table -->
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Timestamp</th>
-                        <th>Message</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-02-19T15:16:39.000Z</td>
-                        <td>Log Entry 1</td>
-                    </tr>
-                    <tr>
-                        <td>2025-02-20T10:15:20.000Z</td>
-                        <td>Log Entry 2</td>
-                    </tr>
-                    <tr>
-                        <td>2025-02-21T12:05:45.000Z</td>
-                        <td>Log Entry 3</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="content p-4">
+                <h2>Log Viewer</h2><br>
 
-            <!-- Pagination -->
-            <nav>
-                <ul class="pagination">
-                    <li class="page-item disabled">
-                        <span class="page-link">Previous</span>
-                    </li>
-                    <li class="page-item active">
-                        <span class="page-link">1</span>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                <div
+                    class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Select Log Type Dropdown -->
+                        <div>
+                            <label for="logType" class="form-label">Select Log
+                                Type:</label>
+                            <select
+                                class="form-select custom-select d-inline-block"
+                                id="logType" style="width: 200px;">
+                                <option value="sys_logs_collection">System
+                                    Logs</option>
+                                <option
+                                    value="application_logs_collection">Application
+                                    Logs</option>
+                                <option value="vpc_logs_collection">VPC
+                                    Logs</option>
+                            </select>
+                        </div>
+
+                        <!-- Search Box -->
+                        <div>
+
+                            <input type="text" class="form-control"
+                                id="searchQuery"
+                                placeholder="You can enter a search term or leave the box empty to query all logs.">
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="align-self-end">
+                            <button class="btn btn-primary"
+                                onclick="searchLogs()">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>TimeStamp</th>
+                                    <th>Object ID</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="table-body">
+                        <table class="table table-sm">
+                            <tbody>
+                                <!-- Table rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+
+                        <div id="loading" class="text-center"
+                            style="display:none;">
+                            <div class="spinner-border text-primary"
+                                role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination-container">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item disabled"><span
+                                    class="page-link"
+                                    id="prevBtn">Previous</span></li>
+                            <li class="page-item active"><span
+                                    class="page-link"
+                                    id="currentPage">1</span></li>
+                            <li class="page-item"><a class="page-link"
+                                    href="#"
+                                    id="nextBtn">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <script>
-        function changeLogType() {
-            let logType = document.getElementById("logType").value;
-            window.location.href = `?log_type=${logType}`;
-        }
-    </script>
-</body>
-
+    </body>
 </html>

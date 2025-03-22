@@ -1,0 +1,178 @@
+let currentPage = 1;
+let pageSize = 20;
+let totalPages = 1;
+let searchQuery = "";
+
+function searchLogs() {
+    searchQuery = document.getElementById("searchQuery").value;
+    currentPage = 1;
+    loadLogs(currentPage);
+}
+
+function loadLogs(page) {
+    let logType = document.getElementById("logType").value;
+    let loadingIndicator = document.getElementById("loading");
+    loadingIndicator.style.display = "block";
+    let url = `/fetch-logs/?page=${page}&page_size=${pageSize}&collection_name=${logType}`;
+    if (searchQuery) {
+        url += `&search=${encodeURIComponent(searchQuery)}`;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.logs && Array.isArray(data.logs)) {
+                updateTable(data.logs);
+                updatePagination(page, data.total_logs);
+            }
+        })
+        .catch(error => console.error('Error fetching logs:', error))
+        .finally(() => {
+            loadingIndicator.style.display = "none";
+        });
+}
+
+function updateTable(logs) {
+    let tableBody = document.querySelector("table tbody");
+    tableBody.innerHTML = "";
+    logs.forEach(log => {
+        let row = document.createElement("tr");
+
+        let cellTime = document.createElement("td");
+        let rawDate = log.time?.["$date"];
+        cellTime.textContent = rawDate ? new Date(rawDate).toLocaleString('en-US', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: false
+        }) : "No Time Data";
+        row.appendChild(cellTime);
+
+        let cellId = document.createElement("td");
+        cellId.textContent = log["_id"];
+        row.appendChild(cellId);
+
+        row.addEventListener("click", function () {
+            toggleDetails(log, row);
+        });
+
+        tableBody.appendChild(row);
+    });
+}
+
+function toggleDetails(log, row) {
+    let existingDetails = row.nextElementSibling;
+    if (existingDetails && existingDetails.classList.contains("log-details")) {
+        existingDetails.remove();
+        return;
+    }
+    let detailsRow = document.createElement("tr");
+    detailsRow.classList.add("log-details");
+    let detailsCell = document.createElement("td");
+    detailsCell.colSpan = 2;
+    let detailsDiv = document.createElement("div");
+    detailsDiv.classList.add("log-detail-content");
+    let logDetails = "<ul>";
+    for (let key in log) {
+        if (key !== "_id" && key !== "time") {
+            logDetails += `<li><strong>${key}:</strong> ${log[key]}</li>`;
+        }
+    }
+    logDetails += "</ul>";
+    detailsDiv.innerHTML = logDetails;
+    detailsCell.appendChild(detailsDiv);
+    detailsRow.appendChild(detailsCell);
+    row.parentNode.insertBefore(detailsRow, row.nextElementSibling);
+}
+
+function updatePagination(page, totalItems) {
+    const pagination = document.querySelector(".pagination");
+    pagination.innerHTML = "";
+
+    totalPages = Math.ceil(totalItems / pageSize);
+
+    const prevButton = document.createElement("li");
+    prevButton.classList.add("page-item");
+    if (page === 1) prevButton.classList.add("disabled");
+    const prevLink = document.createElement("span");
+    prevLink.classList.add("page-link");
+    prevLink.textContent = "Previous";
+    prevLink.addEventListener("click", () => {
+        if (page > 1) {
+            currentPage = page - 1;
+            loadLogs(currentPage);
+        }
+    });
+    prevButton.appendChild(prevLink);
+    pagination.appendChild(prevButton);
+
+    addPageButton(1, page);
+
+    if (page > 3) {
+        addEllipsis();
+    }
+
+    const startPage = Math.max(2, page - 1);
+    const endPage = Math.min(totalPages - 1, page + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+        addPageButton(i, page);
+    }
+
+    if (page < totalPages - 2) {
+        addEllipsis();
+    }
+
+    if (totalPages > 1) {
+        addPageButton(totalPages, page);
+    }
+
+    const nextButton = document.createElement("li");
+    nextButton.classList.add("page-item");
+    if (page === totalPages) nextButton.classList.add("disabled");
+    const nextLink = document.createElement("span");
+    nextLink.classList.add("page-link");
+    nextLink.textContent = "Next";
+    nextLink.addEventListener("click", () => {
+        if (page < totalPages) {
+            currentPage = page + 1;
+            loadLogs(currentPage);
+        }
+    });
+    nextButton.appendChild(nextLink);
+    pagination.appendChild(nextButton);
+}
+
+function addPageButton(pageNumber, currentPage) {
+    const pagination = document.querySelector(".pagination");
+    const li = document.createElement("li");
+    li.classList.add("page-item");
+    if (pageNumber === currentPage) {
+        li.classList.add("active");
+    }
+
+    const a = document.createElement("span");
+    a.classList.add("page-link");
+    a.textContent = pageNumber;
+    a.addEventListener("click", (e) => {
+        e.preventDefault();
+        currentPage = pageNumber;
+        loadLogs(currentPage);
+    });
+
+    li.appendChild(a);
+    pagination.appendChild(li);
+}
+
+function addEllipsis() {
+    const pagination = document.querySelector(".pagination");
+    const li = document.createElement("li");
+    li.classList.add("page-item", "disabled");
+
+    const span = document.createElement("span");
+    span.classList.add("page-link");
+    span.textContent = "...";
+
+    li.appendChild(span);
+    pagination.appendChild(li);
+}
+

@@ -1,19 +1,37 @@
-from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.http import JsonResponse
+import requests
 
 def log_view(request):
-    logs = [
-        {"time": {"$date": "2025-02-19T15:16:39.000Z"}, "message": "VPC Log Entry 1", "log_type": "vpc"},
-        {"time": {"$date": "2025-02-20T10:15:20.000Z"}, "message": "Sys Log Entry 2", "log_type": "sys"},
-        {"time": {"$date": "2025-02-21T11:30:45.000Z"}, "message": "App Log Entry 3", "log_type": "app"},
-        # Add more logs for testing (20+ logs for pagination)
-    ]
+    return render(request, 'logs.html', {})
 
-    log_type = request.GET.get("log_type", "vpc")  # Default to VPC logs
-    filtered_logs = [log for log in logs if log["log_type"] == log_type]  
+def fetch_logs(request):
+    # Get query parameters
+    page = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 10)
+    collection_name = request.GET.get('collection_name', 'vpc_logs_collection')
+    search_query = request.GET.get('search', None)  # Get the search query
 
-    paginator = Paginator(filtered_logs, 10)  # Show 10 logs per page
-    page_number = request.GET.get("page", 1)
-    page_obj = paginator.get_page(page_number)
+    # Validate page and page_size
+    try:
+        page = int(page)
+        page_size = int(page_size)
+    except ValueError:
+        return JsonResponse({"error": "Invalid page or page_size values. They must be integers."}, status=400)
 
-    return render(request, "logs.html", {"logs": page_obj, "log_type": log_type, "page_obj": page_obj})
+    # Build the FastAPI URL
+    fastapi_url = f'http://localhost:8001/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
+    
+    # Add the search query to the URL if provided
+    if search_query:
+        fastapi_url += f'&search={search_query}'
+
+    try:
+        # Make the request to FastAPI
+        response = requests.get(fastapi_url)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": f"Error fetching logs from FastAPI: {str(e)}"}, status=500)
+
+    return JsonResponse(data, safe=False)
