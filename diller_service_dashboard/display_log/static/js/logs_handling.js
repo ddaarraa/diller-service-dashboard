@@ -16,24 +16,20 @@ function searchLogs() {
 function loadLogs(page) {
     const logType = document.getElementById("logType").value;
     const loadingIndicator = document.getElementById("loading");
-    const searchQuery = document.getElementById("searchQuery").value; // Assuming a search query input exists
-
-    const startDateInput = document.getElementById("startDate").value; // Date input values
+    const searchQuery = document.getElementById("searchQuery").value;
+    const startDateInput = document.getElementById("startDate").value;
     const endDateInput = document.getElementById("endDate").value;
 
     loadingIndicator.style.display = "block";
 
-    // Construct base URL
     let url = `/fetch-logs/?page=${page}&page_size=${pageSize}&collection_name=${logType}`;
 
-    // Append search query if provided
     if (searchQuery) {
         url += `&search=${encodeURIComponent(searchQuery)}`;
     }
 
-    // Handle startDate and endDate if present
     if (startDateInput) {
-        const formattedStartDate = formatDateToISOWithOffset(new Date(startDateInput)); // Format to "yyyy-MM-ddTHH:mm:ss"
+        const formattedStartDate = formatDateToISOWithOffset(new Date(startDateInput));
         url += `&start_date=${encodeURIComponent(formattedStartDate)}`;
     }
     if (endDateInput) {
@@ -41,7 +37,6 @@ function loadLogs(page) {
         url += `&end_date=${encodeURIComponent(formattedEndDate)}`;
     }
 
-    // Fetch logs from the constructed URL
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -55,7 +50,7 @@ function loadLogs(page) {
         .catch(error => console.error("Error fetching logs:", error))
         .finally(() => {
             loadingIndicator.style.display = "none"; // Hide loading indicator after fetch
-        }); 
+        });
 }
 
 function updateTable(logs) {
@@ -203,17 +198,36 @@ function addEllipsis() {
 }
 
 function formatDateToISOWithOffset(dateString) {
-    const date = new Date(dateString); // Convert input to JS date object
-    const offset = "+07:00"; // Assuming your backend uses UTC+7
+    const date = new Date(dateString);
+    const offset = "+07:00";
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = "00"; // If seconds aren't captured in input, default to "00"
+    const seconds = "00";
 
-    // Return formatted date-time string in the correct ISO format
+    // Correctly format the date-time string without the space
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
 
+function clearFilters() {
+    console.log("Clear Filters button clicked!");
+
+    document.getElementById("searchQuery").value = "";
+    document.getElementById("startDate").value = "";
+    document.getElementById("endDate").value = "";
+
+}
+
+function toggleAdvancedSearch() {
+    var advancedSearchSection = document.getElementById("advancedSearchSection");
+
+    // Toggle the visibility of the advanced search section
+    if (advancedSearchSection.style.display === "none") {
+        advancedSearchSection.style.display = "block"; // Show the advanced search
+    } else {
+        advancedSearchSection.style.display = "none"; // Hide the advanced search
+    }
+}

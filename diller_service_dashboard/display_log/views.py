@@ -1,6 +1,9 @@
+import datetime
 from django.shortcuts import render
 from django.http import JsonResponse
 import requests
+import urllib
+
 
 def log_view(request):
     return render(request, 'logs.html', {})
@@ -19,7 +22,7 @@ def fetch_logs(request):
     except ValueError:
         return JsonResponse({"error": "Invalid page or page_size values. They must be integers."}, status=400)
 
-    fastapi_url = f'http://fastapi:8000/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
+    fastapi_url = f'http://localhost:8081/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
     
     if search_query:
         fastapi_url += f'&search={search_query}'
@@ -40,8 +43,7 @@ def fetch_logs(request):
     return JsonResponse(data, safe=False)
 
 
-from datetime import datetime
-import urllib.parse
+
 
 def format_date_to_iso_with_offset_and_encode(date_string):
     # Parse the input string to a datetime object
