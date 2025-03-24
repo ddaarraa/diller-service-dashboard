@@ -56,6 +56,7 @@ function loadLogs(page) {
 function updateTable(logs) {
     let tableBody = document.querySelector("table tbody");
     tableBody.innerHTML = "";
+    
     logs.forEach(log => {
         let row = document.createElement("tr");
 
@@ -66,10 +67,25 @@ function updateTable(logs) {
             hour: '2-digit', minute: '2-digit', second: '2-digit',
             hour12: false
         }) : "No Time Data";
+        
+        // Change color of the time cell based on action
+        if (log.action === "ACCEPT") {
+            cellTime.style.backgroundColor = "#c3e6cb"; // Light green for time cell
+        } else if (log.action === "REJECT") {
+            cellTime.style.backgroundColor = "#f5c6cb"; // Light red for time cell
+        }
         row.appendChild(cellTime);
 
+        // Create and append ID cell
         let cellId = document.createElement("td");
         cellId.textContent = log["_id"];
+        
+        // Change color of the ID cell based on action
+        if (log.action === "ACCEPT") {
+            cellId.style.backgroundColor = "#c3e6cb"; // Light green for ID cell
+        } else if (log.action === "REJECT") {
+            cellId.style.backgroundColor = "#f5c6cb"; // Light red for ID cell
+        }
         row.appendChild(cellId);
 
         row.addEventListener("click", function () {

@@ -6,10 +6,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Log Viewer</title>
-        <link rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet"
-            href="{% static 'css/styles.css' %}?v={{ timestamp }}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}?v={{ timestamp }}">
         <script
             src="{% static 'js/logs_handling.js' %}?v={{ timestamp }}"></script>
 
@@ -92,7 +90,7 @@
 
                 <div class="table-container mt-4">
                     <div class="table-header">
-                        <table class="table table-sm">
+                        <table class="table table-sm table-primary">
                             <thead>
                                 <tr>
                                     <th>TimeStamp</th>
@@ -102,7 +100,7 @@
                         </table>
                     </div>
                     <div class="table-body">
-                        <table class="table table-sm">
+                        <table class="table table-sm custom-table">
                             <tbody>
                             </tbody>
                         </table>

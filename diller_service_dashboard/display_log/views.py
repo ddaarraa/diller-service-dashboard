@@ -22,7 +22,7 @@ def fetch_logs(request):
     except ValueError:
         return JsonResponse({"error": "Invalid page or page_size values. They must be integers."}, status=400)
 
-    fastapi_url = f'http://localhost:8081/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
+    fastapi_url = f'http://fastapi:8000/raw-logs/?page={page}&page_size={page_size}&collection_name={collection_name}'
     
     if search_query:
         fastapi_url += f'&search={search_query}'
