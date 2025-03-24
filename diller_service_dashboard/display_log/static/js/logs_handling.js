@@ -68,25 +68,32 @@ function updateTable(logs) {
             hour12: false
         }) : "No Time Data";
         
-        // Change color of the time cell based on action
-        if (log.action === "ACCEPT") {
-            cellTime.style.backgroundColor = "#c3e6cb"; // Light green for time cell
-        } else if (log.action === "REJECT") {
-            cellTime.style.backgroundColor = "#f5c6cb"; // Light red for time cell
-        }
         row.appendChild(cellTime);
 
         // Create and append ID cell
         let cellId = document.createElement("td");
-        cellId.textContent = log["_id"];
-        
-        // Change color of the ID cell based on action
-        if (log.action === "ACCEPT") {
-            cellId.style.backgroundColor = "#c3e6cb"; // Light green for ID cell
-        } else if (log.action === "REJECT") {
-            cellId.style.backgroundColor = "#f5c6cb"; // Light red for ID cell
-        }
+        cellId.textContent = log["_id"];      
         row.appendChild(cellId);
+
+        let cellSrcAddress = document.createElement("td");
+        cellSrcAddress.textContent = log["srcaddr"];      
+        row.appendChild(cellSrcAddress);
+
+        let cellAction = document.createElement("td");
+        cellAction.textContent = log["action"]
+        row.appendChild(cellAction)
+
+        if (log.action === "ACCEPT") {
+            cellId.style.backgroundColor = "#c3e6cb";
+            cellTime.style.backgroundColor = "#c3e6cb";
+            cellAction.style.backgroundColor = "#c3e6cb";
+            cellSrcAddress.style.backgroundColor = "#c3e6cb";
+        } else if (log.action === "REJECT") {
+            cellId.style.backgroundColor = "#f5c6cb";
+            cellTime.style.backgroundColor = "#f5c6cb";
+            cellAction.style.backgroundColor = "#f5c6cb";
+            cellSrcAddress.style.backgroundColor = "#f5c6cb";
+        }
 
         row.addEventListener("click", function () {
             toggleDetails(log, row);

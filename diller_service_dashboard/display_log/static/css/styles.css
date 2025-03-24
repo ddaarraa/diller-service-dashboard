@@ -98,7 +98,15 @@ body {
 
 .table th:nth-child(2),
 .table td:nth-child(2) {
-    width: 80%;
+    width: 40%;
+}
+.table th:nth-child(3),
+.table td:nth-child(3) {
+    width: 30%;
+}
+.table th:nth-child(4),
+.table td:nth-child(4) {
+    width: 10%;
 }
 
 /* Loading Indicator */
