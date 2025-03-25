@@ -1,4 +1,4 @@
-{% load static %}
+ {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,10 +6,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Log Viewer</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{% static 'css/styles.css' %}?v={{ timestamp }}">
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <link rel="stylesheet"
+            href="{% static 'css/styles.css' %}?v={{ timestamp }}">
         <script
             src="{% static 'js/logs_handling.js' %}?v={{ timestamp }}"></script>
+
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     </head>
 
@@ -22,15 +27,17 @@
             </div>
 
             <div class="content p-4">
-                <h2>Log Viewer</h2><br>
+                <h1>Log Viewer</h1><hr>
 
                 <!-- Row for Select Log Type -->
-                <div class="row mb-3">
-                    <div class="col-md-6 d-flex align-items-center">
-                        <label for="logType" class="form-label me-2">Select Log
-                            Type:</label>
+                <div class="row mb-2">
+                    <div class="col-md-5 d-flex align-items-center">
+                        <label for="logType" class="form-label me-2 text-nowrap"
+                            style="width: 200px;">Select
+                            Log
+                            Type :</label>
                         <select class="form-select custom-select" id="logType"
-                            style="width: 170px; height: 38px;">
+                            style="width: 170px; height: 40px;">
                             <option value="sys_logs_collection">System
                                 Logs</option>
                             <option
@@ -44,55 +51,64 @@
                             onclick="searchLogs()">Search</button>
 
                         <button id="advancedButton"
-                            class="btn btn-secondary ms-2"
-                            onclick="toggleAdvancedSearch()">Advanced
-                            Search</button>
+                            class="btn btn-secondary "
+                            style="white-space: nowrap;"
+                            onclick="toggleAdvancedSearch()">
+                            <i id="dropdownIcon"
+                                class="fas fa-chevron-down"></i> Advanced Search
+                        </button>
+
                     </div>
                 </div>
 
                 <div id="advancedSearchSection" style="display: none;">
+
                     <!-- Search Section -->
-                    <div class="row mb-3">
-                        <div class="col-md-12 d-flex align-items-center gap-2">
+                    <div class="row mb-2">
+                        <div
+                            class="col-md-12 d-flex align-items-center gap-2">
                             <label for="searchQuery"
-                                class="form-label me2">Search section:</label>
+                                class="form-label me2">Search
+                                :</label>
                             <input type="text" class="form-control"
-                                id="searchQuery" placeholder="Enter search term"
+                                id="searchQuery"
+                                placeholder="Enter search term"
                                 style="height: 38px; width: 180px;">
+                            <button class="btn btn-secondary ms-2"
+                                onclick="clearFilters()"
+                                style="width: 180px;">Clear Filters</button>
+
                         </div>
                     </div>
 
                     <!-- Date Between Section -->
-                    <div class="row mb-3">
-                        <div class="col-md-12 d-flex align-items-center gap-2">
-                            <label for="startDate" class="form-label me2">Date
+                    <div class="row mb-1">
+                        <div
+                            class="col-md-12 d-flex align-items-center gap-2">
+                            <label for="startDate"
+                                class="form-label me2">Date
                                 Between:</label>
                             <input type="datetime-local"
-                                class="form-control date-input" id="startDate"
+                                class="form-control date-input"
+                                id="startDate"
                                 placeholder="Start Date"
                                 style="height: 38px; width: 180px;">
                             <input type="datetime-local"
                                 class="form-control date-input" id="endDate"
                                 placeholder="End Date"
                                 style="height: 38px; width: 180px;">
+
                         </div>
                     </div>
 
-                    <!-- Buttons to Trigger Search and Clear Filters -->
-                    <div class="row mb-3">
-                        <div class="col-md-12 d-flex align-items-center gap-2">
-
-                            <button class="btn btn-secondary"
-                                onclick="clearFilters()">Clear Filters</button>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="table-container mt-4">
+                <div class="table-container mt-1">
                     <div class="table-header">
-                        <table class="table table-sm table-primary">
+                        <table class="table table-sm table-primary ">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th>TimeStamp</th>
                                     <th>Object ID</th>
                                     <th>Source Address</th>
@@ -104,6 +120,7 @@
                     <div class="table-body">
                         <table class="table table-sm custom-table">
                             <tbody>
+
                             </tbody>
                         </table>
 
@@ -111,7 +128,8 @@
                             style="display:none;">
                             <div class="spinner-border text-primary"
                                 role="status">
-                                <span class="visually-hidden">Loading...</span>
+                                <span
+                                    class="visually-hidden">Loading...</span>
                             </div>
                         </div>
                     </div>
@@ -123,9 +141,11 @@
                             <li class="page-item disabled"><span
                                     class="page-link"
                                     id="prevBtn">Previous</span></li>
-                            <li class="page-item active"><span class="page-link"
+                            <li class="page-item active"><span
+                                    class="page-link"
                                     id="currentPage">1</span></li>
-                            <li class="page-item"><a class="page-link" href="#"
+                            <li class="page-item"><a class="page-link"
+                                    href="#"
                                     id="nextBtn">Next</a></li>
                         </ul>
                     </nav>

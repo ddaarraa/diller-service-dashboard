@@ -52,13 +52,20 @@ function loadLogs(page) {
             loadingIndicator.style.display = "none"; // Hide loading indicator after fetch
         });
 }
-
 function updateTable(logs) {
     let tableBody = document.querySelector("table tbody");
-    tableBody.innerHTML = "";
-    
+    tableBody.innerHTML = ""; // Clear the existing rows before adding new ones
+
     logs.forEach(log => {
         let row = document.createElement("tr");
+
+        let dropdownCell = document.createElement("td");
+        dropdownCell.classList.add("dropdown-cell");
+
+        let dropdownIcon = document.createElement("i");
+        dropdownIcon.classList.add("fa", "fa-chevron-down");  // Add your desired icon class
+        dropdownCell.appendChild(dropdownIcon);
+        row.appendChild(dropdownCell);
 
         let cellTime = document.createElement("td");
         let rawDate = log.time?.["$date"];
@@ -67,32 +74,33 @@ function updateTable(logs) {
             hour: '2-digit', minute: '2-digit', second: '2-digit',
             hour12: false
         }) : "No Time Data";
-        
         row.appendChild(cellTime);
 
-        // Create and append ID cell
         let cellId = document.createElement("td");
-        cellId.textContent = log["_id"];      
+        cellId.textContent = log["_id"];
         row.appendChild(cellId);
 
         let cellSrcAddress = document.createElement("td");
-        cellSrcAddress.textContent = log["srcaddr"];      
+        cellSrcAddress.textContent = log["srcaddr"];
         row.appendChild(cellSrcAddress);
 
         let cellAction = document.createElement("td");
-        cellAction.textContent = log["action"]
-        row.appendChild(cellAction)
+        cellAction.textContent = log["action"];
+        row.appendChild(cellAction);
 
         if (log.action === "ACCEPT") {
             cellId.style.backgroundColor = "#c3e6cb";
             cellTime.style.backgroundColor = "#c3e6cb";
             cellAction.style.backgroundColor = "#c3e6cb";
             cellSrcAddress.style.backgroundColor = "#c3e6cb";
+            dropdownCell.style.backgroundColor = "#c3e6cb";
+
         } else if (log.action === "REJECT") {
             cellId.style.backgroundColor = "#f5c6cb";
             cellTime.style.backgroundColor = "#f5c6cb";
             cellAction.style.backgroundColor = "#f5c6cb";
             cellSrcAddress.style.backgroundColor = "#f5c6cb";
+            dropdownCell.style.backgroundColor = "#f5c6cb";
         }
 
         row.addEventListener("click", function () {
@@ -103,6 +111,7 @@ function updateTable(logs) {
     });
 }
 
+
 function toggleDetails(log, row) {
     let existingDetails = row.nextElementSibling;
     if (existingDetails && existingDetails.classList.contains("log-details")) {
@@ -112,7 +121,7 @@ function toggleDetails(log, row) {
     let detailsRow = document.createElement("tr");
     detailsRow.classList.add("log-details");
     let detailsCell = document.createElement("td");
-    detailsCell.colSpan = 2;
+    detailsCell.colSpan = row.children.length;
     let detailsDiv = document.createElement("div");
     detailsDiv.classList.add("log-detail-content");
     let logDetails = "<ul>";
@@ -246,11 +255,18 @@ function clearFilters() {
 
 function toggleAdvancedSearch() {
     var advancedSearchSection = document.getElementById("advancedSearchSection");
+    var dropdownIcon = document.getElementById('dropdownIcon');
 
     // Toggle the visibility of the advanced search section
     if (advancedSearchSection.style.display === "none") {
-        advancedSearchSection.style.display = "block"; // Show the advanced search
+        advancedSearchSection.style.display = "block"
+        dropdownIcon.classList.remove('fa-chevron-down');
+        dropdownIcon.classList.add('fa-chevron-up');
     } else {
         advancedSearchSection.style.display = "none"; // Hide the advanced search
+        dropdownIcon.classList.remove('fa-chevron-up');
+        dropdownIcon.classList.add('fa-chevron-down');
     }
 }
+
+
