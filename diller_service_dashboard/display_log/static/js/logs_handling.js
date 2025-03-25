@@ -124,6 +124,7 @@ function toggleDetails(log, row) {
     detailsCell.colSpan = row.children.length;
     let detailsDiv = document.createElement("div");
     detailsDiv.classList.add("log-detail-content");
+    detailsDiv.style.color = "white";
     let logDetails = "<ul>";
     for (let key in log) {
         if (key !== "_id" && key !== "time") {

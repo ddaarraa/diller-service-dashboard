@@ -62,6 +62,7 @@ body {
     top: 0;
     z-index: 1;
     background-color: white;
+    padding-right: 15px;
 }
 
 
@@ -79,6 +80,7 @@ body {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding-right: 10px;
 }
 
 .table th {
@@ -87,6 +89,7 @@ body {
     text-align: left;
     color: white;
     text-transform: uppercase;
+
 }
 
 .table thead tr th:first-child {
@@ -101,9 +104,10 @@ body {
 
 .table td {
     padding: 10px;
-    background-color: #ffffff;
+    background-color: #495057;
     border-bottom: 1px solid #ddd;
     text-align: left;
+
 }
 
 .table td:first-child {
@@ -130,12 +134,9 @@ body {
     border-bottom-right-radius: 8px;
 }
 
-.table tr:hover td {
-    background-color: #f8f9fa;
-}
 
 .table td:last-child {
-    padding-left: 20px;
+    padding-left: 10px;
 }
 
 .table td:nth-child(4) {
