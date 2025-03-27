@@ -3,7 +3,7 @@ version: "3.8"
 services:
   web:
     build: .
-    container_name: django-app
+    container_name: diller-dashboard
     ports:
       - "8000:8000"
     environment:
@@ -12,9 +12,8 @@ services:
     networks:
       - shared_network
     volumes:
-      - .:/app  # Enables live reloading by mounting your code directory
+      - .:/app # Enables live reloading by mounting your code directory
     command: python manage.py runserver 0.0.0.0:8000
 networks:
   shared_network:
     external: true
-    
