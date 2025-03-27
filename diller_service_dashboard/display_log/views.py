@@ -8,6 +8,11 @@ import urllib
 def log_view(request):
     return render(request, 'logs.html', {})
 
+def dashboard_view(request):
+    return render(request, 'dashboard.html', {})
+
+
+
 def fetch_logs(request):
     page = request.GET.get('page', 1)
     page_size = request.GET.get('page_size', 10)
