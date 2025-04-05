@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const newWidth = startWidth + widthChange;
 
         // Restrict width between 200px and 700px
-        if (newWidth >= 200 && newWidth <= 700) {
+        if (newWidth >= 200 && newWidth <= 900) {
             detailsPanel.style.width = newWidth + 'px';
         }
         adjustPaginationPosition(); // Adjust pagination after resizing
@@ -79,15 +79,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // Function to show the details panel and adjust pagination position
     function showDetails(correlationId, logIdX, logIdY, value) {
         const panel = document.getElementById('detailsPanel');
-        panel.style.display = 'flex'; // Make the details panel visible
+        panel.style.display = 'flex';
+
         document.getElementById('detailsCorrelationId').innerText = correlationId;
         document.getElementById('detailsLogIdX').innerText = logIdX;
         document.getElementById('detailsLogIdY').innerText = logIdY;
         document.getElementById('detailsValue').innerText = value;
 
-        adjustPaginationPosition(); // Adjust pagination after opening the details panel
-        adjustTableLayout(); // Adjust table layout when the details panel is opened
+        adjustPaginationPosition();
+
+        // Render heatmap
+        renderHeatmap(logIdX); // <- logIdX is the main row clicked
     }
+
 
     // Close the details panel and adjust pagination position
     function closeDetails() {

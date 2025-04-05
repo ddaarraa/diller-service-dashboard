@@ -114,10 +114,16 @@ function updateTable(logs) {
 
 function toggleDetails(log, row) {
     let existingDetails = row.nextElementSibling;
+    let dropdownIcon = row.querySelector(".dropdown-cell i");  // Get the icon inside the first cell
+
+    // Toggle the dropdown icon between up and down
     if (existingDetails && existingDetails.classList.contains("log-details")) {
         existingDetails.remove();
+        dropdownIcon.classList.remove("fa-chevron-up");
+        dropdownIcon.classList.add("fa-chevron-down");
         return;
     }
+
     let detailsRow = document.createElement("tr");
     detailsRow.classList.add("log-details");
     let detailsCell = document.createElement("td");
@@ -136,7 +142,12 @@ function toggleDetails(log, row) {
     detailsCell.appendChild(detailsDiv);
     detailsRow.appendChild(detailsCell);
     row.parentNode.insertBefore(detailsRow, row.nextElementSibling);
+
+    // Change the dropdown icon to up direction when expanding details
+    dropdownIcon.classList.remove("fa-chevron-down");
+    dropdownIcon.classList.add("fa-chevron-up");
 }
+
 
 function updatePagination(page, totalItems) {
     const pagination = document.querySelector(".pagination");
