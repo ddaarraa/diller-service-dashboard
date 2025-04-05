@@ -72,10 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
         adjustPaginationPosition();
         adjustTableLayout();
     });
-    window.addEventListener('load', function () {
-        adjustPaginationPosition();
-        adjustTableLayout();
-    });
+    // window.addEventListener('load', function () {
+    //     adjustPaginationPosition();
+    //     adjustTableLayout();
+    // });
 
     function showDetails(correlationData) {
         const panel = document.getElementById('detailsPanel');
@@ -99,9 +99,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const matrixData = [];
 
         correlationData.forEach(item => {
-            const xKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('log_id_x'));
-            const yKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('log_id_y'));
-
+            const xKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('x_type'));
+            const yKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('y_type'));
+    
             if (!xLabels.includes(xKey)) xLabels.push(xKey);
             if (!yLabels.includes(yKey)) yLabels.push(yKey);
 
@@ -168,8 +168,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         labels: xLabels,
                         offset: true,
                         ticks: {
-                            callback: function (val, index) {
-                                return this.getLabelForValue(val).slice(0, 6) + '…';
+                            callback: function(val, index) {
+                                return this.getLabelForValue(val).slice(0, 5);
                             },
                             autoSkip: false
                         }
@@ -179,8 +179,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         labels: yLabels,
                         offset: true,
                         ticks: {
-                            callback: function (val, index) {
-                                return this.getLabelForValue(val).slice(0, 6) + '…';
+                            callback: function(val, index) {
+                                return this.getLabelForValue(val).slice(0, 5);
                             },
                             autoSkip: false
                         }
@@ -211,7 +211,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 window.onload = function () {
+    // adjustPaginationPosition();
+    // adjustTableLayout();
     fetchData();
+    adjustPaginationPosition();
 };
 let correlationData = null
 
@@ -271,6 +274,7 @@ function updateTable(datas) {
 
             row.classList.add("selected-row");
             showDetails(data.correlation);
+            adjustPaginationPosition();
         });
 
         tableBody.appendChild(row);
