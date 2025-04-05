@@ -69,8 +69,19 @@ def fetch_correlation(request):
 
     return JsonResponse(data, safe=False)
 
+def fetch_log_by_id(request):
+    _id = request.GET.get('_id', 1)
+    collection_name = request.GET.get('collection_name', "vpc_logs_collection")
+    fastapi_url = f'http://fastapi:8000/raw-logs-id?_id={_id}&collection_name={collection_name}'
 
+    try:
+        response = requests.get(fastapi_url)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": f"Error fetching logs from FastAPI: {str(e)}"}, status=500)
 
+    return JsonResponse(data, safe=False)
 
 def format_date_to_iso_with_offset_and_encode(date_string):
     # Parse the input string to a datetime object

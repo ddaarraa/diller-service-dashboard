@@ -1,7 +1,9 @@
-// correlationData
+
 document.addEventListener("DOMContentLoaded", function () {
     const detailsPanel = document.getElementById('detailsPanel');
     const panelResizer = detailsPanel.querySelector('.panel-resizer');
+    // var elems = document.querySelectorAll('.modal');
+    // M.Modal.init(elems);
 
     let isResizing = false;
     let startX;
@@ -72,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
         adjustPaginationPosition();
         adjustTableLayout();
     });
-    // window.addEventListener('load', function () {
-    //     adjustPaginationPosition();
-    //     adjustTableLayout();
-    // });
+    window.addEventListener('load', function () {
+        adjustPaginationPosition();
+        adjustTableLayout();
+    });
 
     function showDetails(correlationData) {
         const panel = document.getElementById('detailsPanel');
@@ -189,8 +191,56 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             plugins: [ChartDataLabels]
         });
-    }
+        canvas.addEventListener('click', async function(event) {
+            const points = heatmapChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+    
+            if (points.length) {
+                const point = points[0];
+                let panelDetail = correlationData[point.index];
 
+                let x_collecion_name = "vpc_logs_collection";
+                let y_collecion_name = "vpc_logs_collection";
+
+                if (panelDetail.x_type.includes("Sys")) {
+                    x_collecion_name = "sys_logs_collection";
+                } else if (panelDetail.x_type.includes("App")) {
+                    x_collecion_name = "application_logs_collection";
+                }
+
+                if (panelDetail.y_type.includes("Sys")) {
+                    y_collecion_name = "sys_logs_collection";
+                } else if (panelDetail.y_type.includes("App")) {
+                    y_collecion_name = "application_logs_collection";
+                }
+
+                try {
+                    const x_detail = await fetchLogById(panelDetail.log_id_x, x_collecion_name);
+                    const y_detail = await fetchLogById(panelDetail.log_id_y, y_collecion_name);
+
+                    console.log(x_detail, y_detail);
+
+                    // Open Modal and Show Data
+                    const modalContent = document.getElementById("logDetailsContent");
+                    modalContent.innerHTML = `
+                        <p><strong>X Detail:</strong> ${JSON.stringify(x_detail)}</p>
+                        <p><strong>Y Detail:</strong> ${JSON.stringify(y_detail)}</p>
+                    `;
+                    const logDetailsModal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
+                    logDetailsModal.show();
+
+                } catch (error) {
+                    console.error('Error fetching log details:', error);
+                }
+            }
+        });
+        function formatLogDetails(logDetails) {
+            if (!logDetails) return "No data available";
+        
+            // Format the details as needed (example for JSON format)
+            return `<pre>${JSON.stringify(logDetails, null, 2)}</pre>`;
+        }
+    }
+    
     function closeDetails() {
         document.querySelectorAll("table tbody tr").forEach(r => {
             r.classList.remove("selected-row");
@@ -206,15 +256,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Expose closeDetails and showDetails for external use
     window.showDetails = showDetails;
     window.closeDetails = closeDetails;
+    window.adjustPaginationPosition = adjustPaginationPosition
 });
 
 
 
 window.onload = function () {
-    // adjustPaginationPosition();
-    // adjustTableLayout();
-    fetchData();
     adjustPaginationPosition();
+    fetchData();
 };
 let correlationData = null
 
@@ -273,12 +322,31 @@ function updateTable(datas) {
             cellTime.style.backgroundColor = "#c3e6cb";
 
             row.classList.add("selected-row");
-            showDetails(data.correlation);
             adjustPaginationPosition();
+            showDetails(data.correlation);
+            
         });
 
         tableBody.appendChild(row);
     });
+}
+
+logsDetail = []
+
+async function fetchLogById(id, collection_name) {
+    const url = `/fetch-log-by-id/?_id=${id}&collection_name=${collection_name}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.log) {
+            return data.log
+        } else {
+            console.error("Unexpected response format:", data);
+        }
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    }
 }
 
 
