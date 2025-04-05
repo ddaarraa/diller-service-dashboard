@@ -38,13 +38,11 @@ body {
 
 .content {
     margin-left: 250px;
-    padding: 20px;
     flex-grow: 1;
     min-height: calc(100vh - 60px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-bottom: 50px;
 }
 
 .table-container {
