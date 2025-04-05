@@ -59,7 +59,7 @@ body {
 
 .table-header {
     width: 100%;
-    position: sticky;
+    position: sticky; 
     top: 0;
     z-index: 1;
     background-color: white;
@@ -82,7 +82,7 @@ body {
 
 .table th {
     padding: 10px;
-    padding-left: 50px;
+    /* padding-left: 50px;  */
     background-color: #495057;
     color: white;
     text-transform: uppercase;
@@ -90,26 +90,36 @@ body {
 }
 
 .table td {
-    padding: 10px;
-    padding-left: 100px;
+    padding: 10px; 
+    /* padding-left: 100px;  */
     /* This will be dynamically adjusted */
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
 
 /* Make the table more flexible in the first column */
-.table th:first-child {
-    width: 1px;
-    text-align: left;
-}
+.modal-content{
+    .table th:first-child , .table td:first-child{
+        /* width: 1px; */
+        padding-right: 110px;
+        text-align: right;
+    }
 
-.table th:last-child {
-    width: 1px;
-    text-align: left;
-}
+    .table th:nth-child(2), .table td:nth-child(2) {
+        text-align: left;
+        padding-right: 110px;  /* Adjust padding as needed */
+    }
 
-.table td:nth-child(2) {
-    padding-right: 110px;
+    /* Third column */
+    .table th:nth-child(3), .table td:nth-child(3) {
+        text-align: left;
+        padding-right: 110px;  /* Adjust padding as needed */
+    }
+
+    /* Last column */
+    .table th:last-child, .table td:last-child {
+        text-align: left;
+    }
 }
 
 /* Details Panel */
@@ -196,9 +206,19 @@ table tbody tr:hover td {
     max-height: 50%;
     height: 400px ;
 }
+#logDetailsModal .modal-dialog {
+    max-width: 60%; /* Set custom width */
+    max-height: 800px;
+}
+#logDetailsModal .modal-content {
+    max-height: 800px; /* Ensure the content respects the max-height */
+    overflow-y: auto; /* Enable scrolling if content exceeds the height */
+}
+
+
 
 /* Responsive */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
@@ -222,4 +242,4 @@ table tbody tr:hover td {
         left: 0;
         right: 250px;
     }
-}
+} */

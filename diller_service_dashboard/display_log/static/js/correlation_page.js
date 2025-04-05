@@ -221,9 +221,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Open Modal and Show Data
                     const modalContent = document.getElementById("logDetailsContent");
+                    let xRawDate = x_detail.time?.["$date"];
+                    let xFormattedDate = xRawDate ? new Date(xRawDate).toLocaleString('en-US', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: false
+                    }) : "No Time Data";
+
+                    let yRawDate = y_detail.time?.["$date"];
+                    let yFormattedDate = yRawDate ? new Date(yRawDate).toLocaleString('en-US', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: false
+                    }) : "No Time Data";
                     modalContent.innerHTML = `
-                        <p><strong>X Detail:</strong> ${JSON.stringify(x_detail)}</p>
-                        <p><strong>Y Detail:</strong> ${JSON.stringify(y_detail)}</p>
+                        <tr class="log-row" data-toggle="collapse" data-target="#logDetails-x" aria-expanded="false">
+                            <td>${xFormattedDate}</td>
+                            <td>${x_detail._id}</td>
+                            <td>${x_detail.srcaddr}</td>
+                            <td>${x_detail.action}</td>
+                        </tr>
+                        <tr id="logDetails-x" class="collapse">
+                            <td colspan="4">${JSON.stringify(x_detail, null, 2)}</td>
+                        </tr>
+                        <tr class="log-row" data-toggle="collapse" data-target="#logDetails-y" aria-expanded="false">
+                            <td>${yFormattedDate}</td>
+                            <td>${y_detail._id}</td>
+                            <td>${y_detail.srcaddr}</td>
+                            <td>${y_detail.action}</td>
+                        </tr>
+                        <tr id="logDetails-y" class="collapse">
+                            <td colspan="4">${JSON.stringify(y_detail, null, 2)}</td>
+                        </tr>
                     `;
                     const logDetailsModal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
                     logDetailsModal.show();
@@ -303,6 +332,8 @@ function updateTable(datas) {
         cellId.textContent = data.id;
         row.appendChild(cellId);
 
+        
+
         let cellTime = document.createElement("td");
         let rawDate = data.time;
         cellTime.textContent = rawDate ? new Date(rawDate).toLocaleString('en-US', {
@@ -310,6 +341,7 @@ function updateTable(datas) {
             hour: '2-digit', minute: '2-digit', second: '2-digit',
             hour12: false
         }) : "No Time Data";
+
         row.appendChild(cellTime);
         row.addEventListener("click", function () {
             document.querySelectorAll("table tbody tr").forEach(r => {

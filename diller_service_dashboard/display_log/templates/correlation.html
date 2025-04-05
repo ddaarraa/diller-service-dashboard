@@ -7,14 +7,15 @@
         <title>Log Correlation</title>
         <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet"
-            href="{% static 'css/correlation.css' %}?v={{ timestamp }}" />
+        
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <link rel="stylesheet"
+        href="{% static 'css/correlation.css' %}?v={{ timestamp }}" />
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script
             src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.2.0/dist/chartjs-chart-matrix.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" defer></script>
         <script
             src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -46,10 +47,12 @@
                             <table class="table table-sm table-primary">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        
                                         <th>Correlation ID</th>
+                                        
                                         <th>TimeStamp</th>
-                                        <th></th>
+                                        
+                                        
                                     </tr>
                                 </thead>
                             </table>
@@ -120,9 +123,19 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div id="logDetailsContent">
-                            <!-- Dynamic content will be inserted here -->
-                        </div>
+                        <table class="table table-striped" id="logDetailsTable">
+                            <thead>
+                              <tr>
+                                <th>TimeStamp</th>
+                                <th>Object ID</th>
+                                <th>Source Address</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody id="logDetailsContent">
+                              <!-- Dynamic rows will be added here -->
+                            </tbody>
+                          </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
