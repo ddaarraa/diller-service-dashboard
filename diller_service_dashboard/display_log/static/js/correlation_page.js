@@ -80,43 +80,45 @@ document.addEventListener("DOMContentLoaded", function () {
     function showDetails(correlationData) {
         const panel = document.getElementById('detailsPanel');
         panel.style.display = 'flex';
-    
+
         adjustPaginationPosition();
         adjustTableLayout();
-    
+
         renderCorrelationHeatmap(correlationData); // New heatmap render call
     }
-    
+
     let heatmapChart = null;
-    
+
     function renderCorrelationHeatmap(correlationData) {
         const canvas = document.getElementById('correlationHeatmap');
         const ctx = canvas.getContext('2d');
-    
+
         // Extract unique log ids for axes
         const xLabels = [];
         const yLabels = [];
         const matrixData = [];
-    
+
         correlationData.forEach(item => {
             const xKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('log_id_x'));
             const yKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('log_id_y'));
-    
+
             if (!xLabels.includes(xKey)) xLabels.push(xKey);
             if (!yLabels.includes(yKey)) yLabels.push(yKey);
-    
+
             matrixData.push({
                 x: xKey,
                 y: yKey,
                 v: item.value
             });
         });
-    
+
         // Destroy existing chart if it exists
         if (heatmapChart) {
             heatmapChart.destroy();
         }
-    
+
+        Chart.register(ChartDataLabels);
+
         // Build chart
         heatmapChart = new Chart(ctx, {
             type: 'matrix',
@@ -131,24 +133,42 @@ document.addEventListener("DOMContentLoaded", function () {
                         if (value < 0) return `rgba(255, 0, 0, ${alpha})`;     // red
                         return 'rgba(255, 255, 255, 1)';                        // white
                     },
-                    width: ({chart}) => (chart.chartArea || {}).width / xLabels.length - 1,
-                    height: ({chart}) => (chart.chartArea || {}).height / yLabels.length - 1,
+                    width: ({ chart }) => (chart.chartArea || {}).width / xLabels.length - 1,
+                    height: ({ chart }) => (chart.chartArea || {}).height / yLabels.length - 1,
+                    datalabels: {
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: function (value, ctx) {
+                            return value.v.toFixed(2);
+                        },
+                        anchor: 'center',
+                        align: 'center'
+                    }
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: (ctx) => `X: ${ctx[0].raw.x}, Y: ${ctx[0].raw.y}`,
+                            label: (ctx) => `Correlation: ${ctx.raw.v}`
+                        }
+                    },
+                    datalabels: {
+                        display: true
+                    }
+                },
                 scales: {
                     x: {
                         type: 'category',
                         labels: xLabels,
                         offset: true,
-                        title: {
-                            // display: true,
-                            text: 'Log ID X'
-                        },
                         ticks: {
-                            callback: function(val, index) {
+                            callback: function (val, index) {
                                 return this.getLabelForValue(val).slice(0, 6) + '…';
                             },
                             autoSkip: false
@@ -158,30 +178,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         type: 'category',
                         labels: yLabels,
                         offset: true,
-                        title: {
-                            // display: true,
-                            text: 'Log ID Y'
-                        },
                         ticks: {
-                            callback: function(val, index) {
+                            callback: function (val, index) {
                                 return this.getLabelForValue(val).slice(0, 6) + '…';
                             },
                             autoSkip: false
                         }
                     }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: (ctx) => `X: ${ctx[0].raw.x}, Y: ${ctx[0].raw.y}`,
-                            label: (ctx) => `Correlation: ${ctx.raw.v}`
-                        }
-                    }
                 }
-            }
+            },
+            plugins: [ChartDataLabels]
         });
     }
-    
+
     function closeDetails() {
         document.querySelectorAll("table tbody tr").forEach(r => {
             r.classList.remove("selected-row");
@@ -215,7 +224,7 @@ async function fetchData() {
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.data && Array.isArray(data.data)) { 
+        if (data.data && Array.isArray(data.data)) {
             correlationData = data.data
             updateTable(correlationData)
         } else {
