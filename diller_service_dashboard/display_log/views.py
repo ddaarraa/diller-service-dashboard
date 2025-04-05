@@ -14,8 +14,6 @@ def dashboard_view(request):
 def correlation_view(request):
     return render(request, 'correlation.html', {})
 
-
-
 def fetch_logs(request):
     page = request.GET.get('page', 1)
     page_size = request.GET.get('page_size', 10)
@@ -40,6 +38,27 @@ def fetch_logs(request):
 
     if end_date : 
         fastapi_url += f'&end_date={end_date}'
+
+    try:
+        response = requests.get(fastapi_url)
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"error": f"Error fetching logs from FastAPI: {str(e)}"}, status=500)
+
+    return JsonResponse(data, safe=False)
+
+def fetch_correlation(request):
+    page = request.GET.get('page', 1)
+    page_size = request.GET.get('page_size', 10)
+
+    try:
+        page = int(page)
+        page_size = int(page_size)
+    except ValueError:
+        return JsonResponse({"error": "Invalid page or page_size values. They must be integers."}, status=400)
+
+    fastapi_url = f'http://fastapi:8000/correlation/?page={page}&page_size={page_size}'
 
     try:
         response = requests.get(fastapi_url)

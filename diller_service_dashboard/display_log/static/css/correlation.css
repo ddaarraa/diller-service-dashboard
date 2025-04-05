@@ -116,8 +116,8 @@ body {
 .details-panel {
     display: none;
     width: 300px;
-    min-width: 300px;
-    max-width: 900px;
+    min-width: 700px;
+    max-width: 1000px;
     background-color: #f8f9fa;
     border-left: 1px solid #ddd;
     overflow: auto;
@@ -176,6 +176,25 @@ body {
 .custom-table tr:hover {
     background-color: #f5f5f5;
     cursor: pointer;
+}
+/* Hover effect for rows */
+table tbody tr:hover td {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.details-panel {
+    display: flex;
+    flex-direction: column; /* stack children vertically */
+    align-items: center;     /* center the canvas and button horizontally */
+    gap: 1rem;               /* spacing between elements */
+    padding: 1rem;
+}
+
+#correlationHeatmap {
+    max-width: 80%;
+    max-height: 50%;
+    height: 400px ;
 }
 
 /* Responsive */

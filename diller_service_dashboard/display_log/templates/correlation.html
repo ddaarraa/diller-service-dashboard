@@ -11,7 +11,8 @@
             href="{% static 'css/correlation.css' %}?v={{ timestamp }}" />
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.2.0/dist/chartjs-chart-matrix.min.js"></script>
     </head>
     <body>
         <div class="main-wrapper">
@@ -30,7 +31,7 @@
                         class="d-flex justify-content-between align-items-center">
                         <h1>Log Correlation</h1>
                         <button class="btn btn-primary"
-                            onclick="location.reload()">Refresh</button>
+                            onclick="fetchData()">Refresh</button>
                     </div>
                     <hr />
 
@@ -51,7 +52,7 @@
                         <div class="table-body">
                             <table class="table table-sm custom-table">
                                 <tbody>
-                                    <tr
+                                    <!-- <tr
                                         onclick="showDetails('67ec093a60ef76c9033000ab', 'log_id_x0', 'log_id_y0', 0.59)">
                                         <td>67ec093a60ef76c9033000ab</td>
                                         <td>9.00 AM</td>
@@ -61,7 +62,7 @@
                                         onclick="showDetails('67ec093a60ef76c9033000ab', 'log_id_x0', 'log_id_y1', 0.59)">
                                         <td>67ec093a60ef76c9033000ab</td>
                                         <td>10.00 AM</td>
-                                    </tr>
+                                    </tr> -->
                                 </tbody>
                             </table>
 
@@ -96,19 +97,8 @@
             <!-- Resizable Details Panel -->
             <div id="detailsPanel" class="details-panel">
                 <div class="panel-resizer"></div>
-                <div class="p-3">
-                    <h4>Details</h4>
-                    <p><strong>Correlation ID:</strong> <span
-                            id="detailsCorrelationId"></span></p>
-                    <p><strong>Log ID X:</strong> <span
-                            id="detailsLogIdX"></span></p>
-                    <p><strong>Log ID Y:</strong> <span
-                            id="detailsLogIdY"></span></p>
-                    <p><strong>Value:</strong> <span
-                            id="detailsValue"></span></p>
-                    <button class="btn btn-secondary"
-                        onclick="closeDetails()">Close</button>
-                </div>
+                <canvas id="correlationHeatmap" width="100" height="100"></canvas>
+                <button class="btn btn-secondary" onclick="closeDetails()">Close</button>
             </div>
         </div>
 
