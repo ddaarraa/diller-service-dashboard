@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         correlationData.forEach(item => {
             const xKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('x_type'));
             const yKey = Object.values(item).find((_, i) => Object.keys(item)[i].startsWith('y_type'));
-    
+
             if (!xLabels.includes(xKey)) xLabels.push(xKey);
             if (!yLabels.includes(yKey)) yLabels.push(yKey);
 
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         labels: xLabels,
                         offset: true,
                         ticks: {
-                            callback: function(val, index) {
+                            callback: function (val, index) {
                                 return this.getLabelForValue(val).slice(0, 5);
                             },
                             autoSkip: false
@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         labels: yLabels,
                         offset: true,
                         ticks: {
-                            callback: function(val, index) {
+                            callback: function (val, index) {
                                 return this.getLabelForValue(val).slice(0, 5);
                             },
                             autoSkip: false
@@ -191,9 +191,9 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             plugins: [ChartDataLabels]
         });
-        canvas.addEventListener('click', async function(event) {
+        canvas.addEventListener('click', async function (event) {
             const points = heatmapChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
-    
+
             if (points.length) {
                 const point = points[0];
                 let panelDetail = correlationData[point.index];
@@ -264,12 +264,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         function formatLogDetails(logDetails) {
             if (!logDetails) return "No data available";
-        
+
             // Format the details as needed (example for JSON format)
             return `<pre>${JSON.stringify(logDetails, null, 2)}</pre>`;
         }
     }
-    
+
     function closeDetails() {
         document.querySelectorAll("table tbody tr").forEach(r => {
             r.classList.remove("selected-row");
@@ -297,24 +297,31 @@ window.onload = function () {
 let correlationData = null
 
 async function fetchData() {
-    const page = getQueryParameter("page") || 1; // Default to page 1 if not present
+    const loadingSpinner = document.getElementById("loading");
+    loadingSpinner.style.display = "block"; // Show spinner
+
+    const page = getQueryParameter("page") || 1;
     const pageSize = getQueryParameter("page_size") || 10;
     const url = `/fetch-correlation/?page=${page}&page_size=${pageSize}`;
-    closeDetails()
+    closeDetails();
+
     try {
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.data && Array.isArray(data.data)) {
-            correlationData = data.data
-            updateTable(correlationData)
+            correlationData = data.data;
+            updateTable(correlationData);
         } else {
             console.error("Unexpected response format:", data);
         }
     } catch (error) {
         console.error("Error fetching data:", error);
+    } finally {
+        loadingSpinner.style.display = "none"; // Hide spinner
     }
 }
+
 
 // Function to get query parameters from URL
 function getQueryParameter(name) {
@@ -332,7 +339,7 @@ function updateTable(datas) {
         cellId.textContent = data.id;
         row.appendChild(cellId);
 
-        
+
 
         let cellTime = document.createElement("td");
         let rawDate = data.time;
@@ -356,7 +363,7 @@ function updateTable(datas) {
             row.classList.add("selected-row");
             adjustPaginationPosition();
             showDetails(data.correlation);
-            
+
         });
 
         tableBody.appendChild(row);
