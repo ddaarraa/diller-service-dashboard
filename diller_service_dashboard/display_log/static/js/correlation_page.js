@@ -339,8 +339,7 @@ function updateTable(datas) {
         cellId.textContent = data.id;
         row.appendChild(cellId);
 
-
-
+        
         let cellTime = document.createElement("td");
         let rawDate = data.time;
         cellTime.textContent = rawDate ? new Date(rawDate).toLocaleString('en-US', {
