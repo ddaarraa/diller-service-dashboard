@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         offset: true,
                         ticks: {
                             callback: function (val, index) {
-                                return this.getLabelForValue(val).slice(0, 5);
+                                return this.getLabelForValue(val).slice(0, 6);
                             },
                             autoSkip: false
                         }
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         offset: true,
                         ticks: {
                             callback: function (val, index) {
-                                return this.getLabelForValue(val).slice(0, 5);
+                                return this.getLabelForValue(val).slice(0, 6);
                             },
                             autoSkip: false
                         }
@@ -198,26 +198,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const point = points[0];
                 let panelDetail = correlationData[point.index];
 
-                let x_collecion_name = "vpc_logs_collection";
-                let y_collecion_name = "vpc_logs_collection";
+                let x_collecion_name = "application_logs_collection";
+                let y_collecion_name = "application_logs_collection";
 
                 if (panelDetail.x_type.includes("Sys")) {
                     x_collecion_name = "sys_logs_collection";
-                } else if (panelDetail.x_type.includes("App")) {
-                    x_collecion_name = "application_logs_collection";
-                }
+                } 
 
                 if (panelDetail.y_type.includes("Sys")) {
                     y_collecion_name = "sys_logs_collection";
-                } else if (panelDetail.y_type.includes("App")) {
-                    y_collecion_name = "application_logs_collection";
                 }
 
                 try {
                     const x_detail = await fetchLogById(panelDetail.log_id_x, x_collecion_name);
                     const y_detail = await fetchLogById(panelDetail.log_id_y, y_collecion_name);
-
-                    console.log(x_detail, y_detail);
 
                     // Open Modal and Show Data
                     const modalContent = document.getElementById("logDetailsContent");
@@ -292,16 +286,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 window.onload = function () {
     adjustPaginationPosition();
-    fetchData();
+    fetchData(1);
 };
 let correlationData = null
+let currentPage = 1;
+let pageSize = 15;
+let totalPages = 1;
 
-async function fetchData() {
+async function fetchData(page) {
     const loadingSpinner = document.getElementById("loading");
     loadingSpinner.style.display = "block"; // Show spinner
 
-    const page = getQueryParameter("page") || 1;
-    const pageSize = getQueryParameter("page_size") || 10;
     const url = `/fetch-correlation/?page=${page}&page_size=${pageSize}`;
     closeDetails();
 
@@ -312,6 +307,7 @@ async function fetchData() {
         if (data.data && Array.isArray(data.data)) {
             correlationData = data.data;
             updateTable(correlationData);
+            updatePagination(data.page, data.total_data);
         } else {
             console.error("Unexpected response format:", data);
         }
@@ -385,6 +381,98 @@ async function fetchLogById(id, collection_name) {
     } catch (error) {
         console.error("Error fetching data:", error);
     }
+}
+
+function updatePagination(page, totalItems) {
+    const pagination = document.querySelector(".pagination");
+    pagination.innerHTML = "";
+
+    totalPages = Math.ceil(totalItems / pageSize);
+
+    const prevButton = document.createElement("li");
+    prevButton.classList.add("page-item");
+    if (page === 1) prevButton.classList.add("disabled");
+    const prevLink = document.createElement("span");
+    prevLink.classList.add("page-link");
+    prevLink.textContent = "Previous";
+    prevLink.addEventListener("click", () => {
+        if (page > 1) {
+            currentPage = page - 1;
+            fetchData(currentPage);
+        }
+    });
+    prevButton.appendChild(prevLink);
+    pagination.appendChild(prevButton);
+
+    addPageButton(1, page);
+
+    if (page > 3) {
+        addEllipsis();
+    }
+
+    const startPage = Math.max(2, page - 1);
+    const endPage = Math.min(totalPages - 1, page + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+        addPageButton(i, page);
+    }
+
+    if (page < totalPages - 2) {
+        addEllipsis();
+    }
+
+    if (totalPages > 1) {
+        addPageButton(totalPages, page);
+    }
+
+    const nextButton = document.createElement("li");
+    nextButton.classList.add("page-item");
+    if (page === totalPages) nextButton.classList.add("disabled");
+    const nextLink = document.createElement("span");
+    nextLink.classList.add("page-link");
+    nextLink.textContent = "Next";
+    nextLink.addEventListener("click", () => {
+        if (page < totalPages) {
+            currentPage = page + 1;
+            fetchData(currentPage);
+        }
+    });
+    nextButton.appendChild(nextLink);
+    pagination.appendChild(nextButton);
+}
+
+function addPageButton(pageNumber, currentPage) {
+    const pagination = document.querySelector(".pagination");
+    const li = document.createElement("li");
+    li.classList.add("page-item");
+    if (pageNumber === currentPage) {
+        li.classList.add("active");
+    }
+
+    const a = document.createElement("span");
+    a.classList.add("page-link");
+    a.textContent = pageNumber;
+    a.addEventListener("click", (e) => {
+        e.preventDefault();
+        currentPage = pageNumber;
+        fetchData(currentPage);
+    });
+
+    li.appendChild(a);
+    pagination.appendChild(li);
+}
+
+function addEllipsis() {
+    const pagination = document.querySelector(".pagination");
+    const li = document.createElement("li");
+    li.classList.add("page-item", "disabled");
+
+    const span = document.createElement("span");
+    span.classList.add("page-link");
+    span.textContent = "...";
+
+    li.appendChild(span);
+    pagination.appendChild(li);
 }
 
 

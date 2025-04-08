@@ -97,7 +97,6 @@ body {
     text-align: center;
 }
 
-/* Make the table more flexible in the first column */
 .modal-content{
     .table th:first-child , .table td:first-child{
         /* width: 1px; */

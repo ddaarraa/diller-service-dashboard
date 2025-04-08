@@ -50,7 +50,7 @@ def fetch_logs(request):
 
 def fetch_correlation(request):
     page = request.GET.get('page', 1)
-    page_size = request.GET.get('page_size', 10)
+    page_size = request.GET.get('page_size', 15)
 
     try:
         page = int(page)
