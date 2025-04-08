@@ -243,7 +243,11 @@ function addEllipsis() {
 
 function formatDateToISOWithOffset(dateString) {
     const date = new Date(dateString);
-    const offset = "+07:00";
+
+    // Subtract 7 hours from the original date
+    date.setHours(date.getHours() - 7);
+
+    const offset = "+07:00";  // Fixed offset string
 
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -252,7 +256,6 @@ function formatDateToISOWithOffset(dateString) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = "00";
 
-    // Correctly format the date-time string without the space
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
 
