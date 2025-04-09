@@ -99,7 +99,7 @@ body {
     border-top-right-radius: 8px;
 }
 
-.table tr:hover {
+.table td:hover {
     cursor: pointer;
 }
 

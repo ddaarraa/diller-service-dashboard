@@ -59,7 +59,7 @@ body {
 
 .table-header {
     width: 100%;
-    position: sticky; 
+    position: sticky;
     top: 0;
     z-index: 1;
     background-color: white;
@@ -90,34 +90,43 @@ body {
 }
 
 .table td {
-    padding: 10px; 
+    padding: 10px;
     /* padding-left: 100px;  */
     /* This will be dynamically adjusted */
     border-bottom: 1px solid #ddd;
     text-align: center;
 }
 
-.modal-content{
-    .table th:first-child , .table td:first-child{
-        /* width: 1px; */
-        padding-right: 110px;
+/* Make the table more flexible in the first column */
+.modal-content {
+
+    .table th:first-child,
+    .table td:first-child {
+        width: 1px;
+        padding-left: 20px;
         text-align: right;
     }
 
-    .table th:nth-child(2), .table td:nth-child(2) {
-        text-align: left;
-        padding-right: 110px;  /* Adjust padding as needed */
+
+
+
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+        text-align: center;
+        /* Adjust padding as needed */
     }
 
     /* Third column */
-    .table th:nth-child(3), .table td:nth-child(3) {
-        text-align: left;
-        padding-right: 110px;  /* Adjust padding as needed */
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+        text-align: center;
+        /* Adjust padding as needed */
     }
 
     /* Last column */
-    .table th:last-child, .table td:last-child {
-        text-align: left;
+    .table th:last-child,
+    .table td:last-child {
+        text-align: center;
     }
 }
 
@@ -186,6 +195,7 @@ body {
     background-color: #f5f5f5;
     cursor: pointer;
 }
+
 /* Hover effect for rows */
 table tbody tr:hover td {
     background-color: #f0f0f0;
@@ -194,25 +204,35 @@ table tbody tr:hover td {
 
 .details-panel {
     display: flex;
-    flex-direction: column; /* stack children vertically */
-    align-items: center;     /* center the canvas and button horizontally */
-    gap: 1rem;               /* spacing between elements */
+    flex-direction: column;
+    /* stack children vertically */
+    align-items: center;
+    /* center the canvas and button horizontally */
+    gap: 1rem;
+    /* spacing between elements */
     padding: 1rem;
 }
 
 #correlationHeatmap {
     max-width: 80%;
     max-height: 50%;
-    height: 400px ;
+    height: 400px;
 }
+
 #logDetailsModal .modal-dialog {
-    max-width: 60%; /* Set custom width */
+    max-width: 70%;
+    /* Set custom width */
     max-height: 800px;
 }
+
 #logDetailsModal .modal-content {
-    max-height: 800px; /* Ensure the content respects the max-height */
-    overflow-y: auto; /* Enable scrolling if content exceeds the height */
+
+    max-height: 800px;
+    /* Ensure the content respects the max-height */
+    overflow-y: auto;
+    /* Enable scrolling if content exceeds the height */
 }
+
 
 
 

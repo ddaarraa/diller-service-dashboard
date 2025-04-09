@@ -7,16 +7,20 @@
         <title>Log Correlation</title>
         <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-        
+
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
         <link rel="stylesheet"
-        href="{% static 'css/correlation.css' %}?v={{ timestamp }}" />
+            href="{% static 'css/correlation.css' %}?v={{ timestamp }}" />
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script
             src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.2.0/dist/chartjs-chart-matrix.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" defer></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            defer></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+            defer></script>
         <script
             src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
@@ -47,11 +51,11 @@
                             <table class="table table-sm table-primary">
                                 <thead>
                                     <tr>
-                                        
+
                                         <th>Correlation ID</th>
-                                        
+
                                         <th>TimeStamp</th>
-                                        
+
                                     </tr>
                                 </thead>
                             </table>
@@ -60,17 +64,7 @@
                         <div class="table-body">
                             <table class="table table-sm custom-table">
                                 <tbody>
-                                    <!-- <tr
-                                        onclick="showDetails('67ec093a60ef76c9033000ab', 'log_id_x0', 'log_id_y0', 0.59)">
-                                        <td>67ec093a60ef76c9033000ab</td>
-                                        <td>9.00 AM</td>
-                                    </tr>
 
-                                    <tr
-                                        onclick="showDetails('67ec093a60ef76c9033000ab', 'log_id_x0', 'log_id_y1', 0.59)">
-                                        <td>67ec093a60ef76c9033000ab</td>
-                                        <td>10.00 AM</td>
-                                    </tr> -->
                                 </tbody>
                             </table>
 
@@ -112,40 +106,45 @@
                     onclick="closeDetails()">Close</button>
             </div>
 
-            
         </div>
 
-        <div class="modal fade" id="logDetailsModal" tabindex="-1" aria-labelledby="logDetailsModalLabel" aria-hidden="true">
+        <div class="modal fade" id="logDetailsModal" tabindex="-1"
+            aria-labelledby="logDetailsModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="logDetailsModalLabel">Log Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="logDetailsModalLabel">Log
+                            Details</h5>
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <table class="table table-striped" id="logDetailsTable">
                             <thead>
-                              <tr>
-                                <th>TimeStamp</th>
-                                <th>Object ID</th>
-                                <th>Source Address</th>
-                                <th>Action</th>
-                              </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>TimeStamp</th>
+                                    <th>Object ID</th>
+                                    <th>Source Address</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody id="logDetailsContent">
-                              
+
                             </tbody>
-                          </table>
+                        </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <script
-            src="{% static 'js/correlation_page.js' %}?v={{ timestamp }}" defer>
+            src="{% static 'js/correlation_page.js' %}?v={{ timestamp }}"
+            defer>
         </script>
     </body>
 </html>

@@ -140,7 +140,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     datalabels: {
                         color: '#000',
                         font: {
-                            weight: 'bold'
+                            weight: 'bold',
+                            size: 10
                         },
                         formatter: function (value, ctx) {
                             return value.v.toFixed(2);
@@ -203,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (panelDetail.x_type.includes("Sys")) {
                     x_collecion_name = "sys_logs_collection";
-                } 
+                }
 
                 if (panelDetail.y_type.includes("Sys")) {
                     y_collecion_name = "sys_logs_collection";
@@ -228,26 +229,68 @@ document.addEventListener("DOMContentLoaded", function () {
                         hour: '2-digit', minute: '2-digit', second: '2-digit',
                         hour12: false
                     }) : "No Time Data";
+
+                    // Function to convert log details into bullet points
+                    function convertLogToBullets(log) {
+                        let details = "<ul style='text-align: left; list-style-position: inside; padding-left: 20px;'>";
+                        for (let key in log) {
+                            if (log.hasOwnProperty(key) && key !== "_id" && key !== "time") {
+                                details += `<li><strong>${key}:</strong> ${log[key]}</li>`;
+                            }
+                        }
+                        details += "</ul>";
+                        return details;
+                    }
+
+
                     modalContent.innerHTML = `
-                        <tr class="log-row" data-toggle="collapse" data-target="#logDetails-x" aria-expanded="false">
-                            <td>${xFormattedDate}</td>
-                            <td>${x_detail._id}</td>
-                            <td>${x_detail.srcaddr}</td>
-                            <td>${x_detail.action}</td>
-                        </tr>
-                        <tr id="logDetails-x" class="collapse">
-                            <td colspan="4">${JSON.stringify(x_detail, null, 2)}</td>
-                        </tr>
-                        <tr class="log-row" data-toggle="collapse" data-target="#logDetails-y" aria-expanded="false">
-                            <td>${yFormattedDate}</td>
-                            <td>${y_detail._id}</td>
-                            <td>${y_detail.srcaddr}</td>
-                            <td>${y_detail.action}</td>
-                        </tr>
-                        <tr id="logDetails-y" class="collapse">
-                            <td colspan="4">${JSON.stringify(y_detail, null, 2)}</td>
-                        </tr>
-                    `;
+                    <tr class="log-row" data-toggle="collapse" data-target="#logDetails-x" aria-expanded="false">
+                        <td></td>
+                        <td>${xFormattedDate}</td>
+                        <td>${x_detail._id}</td>
+                        <td>${x_detail.srcaddr}</td>
+                        <td>${x_detail.action}</td>
+                    </tr>
+                    <tr id="logDetails-x" class="collapse">
+                        <td colspan="5" style="width: 100%; padding: 0;">  <!-- Ensure the colspan matches the number of columns in your table -->
+                            <div style="width: 100%; padding: 10px; box-sizing: border-box;">
+                                <ul style="text-align: left; list-style-position: inside; padding-left: 20px; width: 100%; margin: 0;">
+                                    ${convertLogToBullets(x_detail)}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="log-row" data-toggle="collapse" data-target="#logDetails-y" aria-expanded="false">
+                        <td></td>
+                        <td>${yFormattedDate}</td>
+                        <td>${y_detail._id}</td>
+                        <td>${y_detail.srcaddr}</td>
+                        <td>${y_detail.action}</td>
+                    </tr>
+                    <tr id="logDetails-y" class="collapse">
+                        <td colspan="5" style="width: 100%; padding: 0;">
+                            <div style="width: 100%; padding: 10px; box-sizing: border-box;">
+                                <ul style="text-align: left; list-style-position: inside; padding-left: 20px; width: 100%; margin: 0;">
+                                    ${convertLogToBullets(y_detail)}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+
+                    // Add event listeners for each row to toggle the corresponding details
+                    const logRows = modalContent.querySelectorAll('.log-row');
+                    logRows.forEach(row => {
+                        row.addEventListener('click', function () {
+                            const target = row.getAttribute('data-target');
+                            const targetRow = document.querySelector(target);
+                            if (targetRow) {
+                                targetRow.classList.toggle('collapse');
+                            }
+                        });
+                    });
+
                     const logDetailsModal = new bootstrap.Modal(document.getElementById('logDetailsModal'));
                     logDetailsModal.show();
 
@@ -256,6 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
         function formatLogDetails(logDetails) {
             if (!logDetails) return "No data available";
 
@@ -330,12 +374,14 @@ function updateTable(datas) {
     tableBody.innerHTML = "";
 
     datas.forEach(data => {
+
+
         let row = document.createElement("tr");
         let cellId = document.createElement("td");
         cellId.textContent = data.id;
         row.appendChild(cellId);
 
-        
+
         let cellTime = document.createElement("td");
         let rawDate = data.time;
         cellTime.textContent = rawDate ? new Date(rawDate).toLocaleString('en-US', {
