@@ -4,6 +4,9 @@ from django.http import JsonResponse
 import requests
 import urllib
 
+headers = {
+    "X-Secret-Key": "w_RZQ0Gj1hMlEjUtAHXk3GnHRspRm8zKzPzE0xxm-Zs"
+}
 
 def log_view(request):
     return render(request, 'logs.html', {})
@@ -40,7 +43,7 @@ def fetch_logs(request):
         fastapi_url += f'&end_date={end_date}'
 
     try:
-        response = requests.get(fastapi_url)
+        response = requests.get(fastapi_url, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.exceptions.RequestException as e:
@@ -61,7 +64,7 @@ def fetch_correlation(request):
     fastapi_url = f'http://fastapi:8000/correlation/?page={page}&page_size={page_size}'
 
     try:
-        response = requests.get(fastapi_url)
+        response = requests.get(fastapi_url, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.exceptions.RequestException as e:
@@ -75,7 +78,7 @@ def fetch_log_by_id(request):
     fastapi_url = f'http://fastapi:8000/raw-logs-id?_id={_id}&collection_name={collection_name}'
 
     try:
-        response = requests.get(fastapi_url)
+        response = requests.get(fastapi_url, headers=headers)
         response.raise_for_status()
         data = response.json()
     except requests.exceptions.RequestException as e:
@@ -84,16 +87,12 @@ def fetch_log_by_id(request):
     return JsonResponse(data, safe=False)
 
 def format_date_to_iso_with_offset_and_encode(date_string):
-    # Parse the input string to a datetime object
     date = datetime.fromisoformat(date_string)
-    
-    # Set the UTC+7 offset
+
     offset = "+07:00"
-    
-    # Format the datetime object to the desired string format
+
     formatted_date = date.strftime(f"%Y-%m-%dT%H:%M:00{offset}")
-    
-    # URL encode the formatted date string
+
     encoded_date = urllib.parse.quote(formatted_date)
     
     return encoded_date
