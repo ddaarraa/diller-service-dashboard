@@ -8,10 +8,10 @@ headers = {
     "X-Secret-Key": "w_RZQ0Gj1hMlEjUtAHXk3GnHRspRm8zKzPzE0xxm-Zs"
 }
 
-def log_view(request):
-    return render(request, 'logs.html', {})
+def finder(request):
+    return render(request, 'finder.html', {})
 
-def dashboard_view(request):
+def statistics(request):
     return render(request, 'dashboard.html', {})
     
 def correlation_view(request):
