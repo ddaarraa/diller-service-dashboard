@@ -50,7 +50,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 160px);
+    max-height: calc(100vh - 143px);
     position: relative;
     padding-bottom: 100px;
 }
@@ -61,13 +61,13 @@ body {
     top: 0;
     z-index: 1;
     background-color: white;
-    padding-right: 15px;
+    /* padding-right: 15px; */
 }
 
 .table-body {
     flex-grow: 1;
-    overflow-y: scroll;
-    position: relative;
+    overflow-y: auto; /* Use auto instead of scroll for smoother behavior */
+    max-height: calc(100vh - 160px); /* Ensure this matches your layout needs */
 }
 
 .table {
@@ -144,13 +144,13 @@ body {
 .pagination-container {
     display: flex;
     justify-content: center;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     position: fixed;
     bottom: 0;
     left: 250px;
     right: 0;
     background-color: #fff;
-    padding: 9px;
+    /* padding: 9px; */
     z-index: 10;
 }
 
